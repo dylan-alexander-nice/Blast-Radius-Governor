@@ -79,8 +79,9 @@ JSON Response:`;
   try {
     const response = await client.send(command);
     
-    if (response.output?.message?.content.length) {
-        const textResponse = response.output.message.content[0].text;
+    const content = response.output?.message?.content;
+    if (content?.length) {
+        const textResponse = content[0].text;
         if (textResponse) {
             // Extract JSON from the response, which might be wrapped in markdown
             const jsonMatch = textResponse.match(/\{[\s\S]*\}/);

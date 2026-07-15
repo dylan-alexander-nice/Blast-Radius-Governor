@@ -24,7 +24,7 @@ NiCE's own 2026 State of Agentic AI outlook names a coming shift: multi-agent pi
 - Real integration with any production system — this gates a *simulated* handoff, it doesn't execute anything downstream
 - A real staged/canary rollout mechanism — it's a distinct UI state for the demo, not real infrastructure
 - Auth, persistence, arbitrary free-text handoffs from an external caller — runs over the 6 fixed demo scenarios only
-- A Nova 2 Lite "validation phase" — this is a prototype. If its output quality is rough, that's a real, reportable finding, not a blocker to resolve before building
+- A Mistral 7B Instruct "validation phase" — this is a prototype. If its output quality is rough, that's a real, reportable finding, not a blocker to resolve before building
 
 ## Acceptance Criteria
 
@@ -41,7 +41,7 @@ Implementation details for each chunk live in `docs/stories/`. Suggested order: 
 
 | # | Story | Covers |
 |---|---|---|
-| 1 | [Scoring Engine](docs/stories/01-scoring-engine.md) | Bedrock/Nova 2 Lite call, prompt, structured output, threshold routing |
+| 1 | [Scoring Engine](docs/stories/01-scoring-engine.md) | Bedrock/Mistral call, prompt, structured output, threshold routing |
 | 2 | [API Server](docs/stories/02-api-server.md) | Express server, `/api/gate` endpoint, request/response contract |
 | 3 | [Web UI](docs/stories/03-web-ui.md) | Scenario picker, result panel, "run all" stretch view |
 | 4 | [Demo Scenarios](docs/stories/04-demo-scenarios.md) | The 6 scenario definitions + rehearsal/recording notes |
