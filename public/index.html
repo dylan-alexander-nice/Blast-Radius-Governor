@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<style>
+@font-face{font-family:"Geist";src:url("fonts/Geist-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:"Geist";src:url("fonts/Geist-Medium.ttf") format("truetype");font-weight:500;font-display:swap}
+@font-face{font-family:"Geist";src:url("fonts/Geist-SemiBold.ttf") format("truetype");font-weight:600;font-display:swap}
+@font-face{font-family:"Geist";src:url("fonts/Geist-Bold.ttf") format("truetype");font-weight:700;font-display:swap}
+@font-face{font-family:"DM Mono";src:url("fonts/DMMono-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:"DM Mono";src:url("fonts/DMMono-Medium.ttf") format("truetype");font-weight:500;font-display:swap}
+html,body{margin:0;padding:0}
+body{background:#f9fafb;font-family:"Geist",ui-sans-serif,system-ui,-apple-system,sans-serif;color:#111827;-webkit-font-smoothing:antialiased}
+a{color:#126bce;text-decoration:none}
+a:hover{color:#17569b}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes sonar{0%{transform:scale(.45);opacity:.55}80%{opacity:0}100%{transform:scale(1.25);opacity:0}}
+@keyframes scan{0%{transform:translateY(-100%)}100%{transform:translateY(300%)}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+  <header data-screen-label="App header" style="height:56px;flex:0 0 56px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 24px;background:#ffffff;border-bottom:1px solid #e5e7eb">
+    <div style="display:flex;align-items:center;gap:12px">
+      <img src="assets/app-name.svg" alt="" style="width:26px;height:26px;display:block"/>
+      <div style="display:flex;flex-direction:column;line-height:1.1">
+        <span style="font-size:14px;font-weight:600;letter-spacing:-0.005em">Blast Radius Governor</span>
+        <span style="font-size:11px;color:#6b7280">Agent-to-agent handoff gate</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:18px">
+      <div style="display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:11px;color:#4b5563;background:#f3f4f6;border:1px solid #e5e7eb;padding:4px 10px;border-radius:9999px">
+        <span style="width:7px;height:7px;border-radius:50%;background:#208337;box-shadow:0 0 0 3px rgba(32,131,55,.15)"></span>Gate online
+      </div>
+      <span style="color:#111827;display:inline-flex" title="Cognigy"><svg height="14" viewBox="0 0 254.555 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M 247.596 0.081 L 254.555 0.081 L 254.555 1.935 L 254.47 7.698 C 254.47 14.791 250.651 18.297 242.928 18.297 L 240.637 18.297 L 240.637 31.919 L 233.678 31.919 L 233.678 18.297 L 231.386 18.297 C 223.664 18.297 219.845 14.791 219.845 7.698 L 219.845 0.04 L 226.761 0.04 L 226.846 6.892 C 226.846 10.358 228.671 12.05 232.362 12.05 L 241.995 12.05 C 245.771 12.05 247.596 10.398 247.596 6.932 L 247.596 0.081 Z"/><path d="M 33.48 25.592 L 33.48 31.96 C 33.48 31.96 11.16 31.96 11.16 32 C 3.734 32 0 28.453 0 21.36 L 0 10.72 C 0 3.627 3.734 0.081 11.16 0.081 L 33.522 0.081 L 33.522 6.448 L 12.093 6.448 C 8.487 6.448 6.704 8.181 6.704 11.567 L 6.704 20.474 C 6.704 23.899 8.487 25.592 12.093 25.592 L 33.48 25.592 Z"/><path d="M 63.607 31.919 L 52.447 31.96 C 44.979 31.96 41.287 28.413 41.287 21.28 L 41.287 10.64 C 41.287 3.547 45.021 0 52.447 0 L 63.607 0 C 71.033 0 74.767 3.547 74.767 10.64 L 74.767 21.28 C 74.767 28.373 71.033 31.919 63.607 31.919 Z M 62.504 25.552 L 53.55 25.552 C 49.816 25.592 47.992 23.819 47.992 20.232 L 47.992 11.728 C 47.992 8.182 49.477 6.408 52.447 6.408 L 62.504 6.408 C 66.238 6.408 68.105 8.182 68.105 11.728 L 68.105 20.232 C 68.105 23.779 66.238 25.552 62.504 25.552 Z"/><path d="M 116.054 14.952 L 116.054 31.96 L 93.819 32 C 86.393 32 82.659 28.453 82.659 21.36 L 82.659 10.72 C 82.659 3.627 86.393 0.081 93.819 0.081 L 116.139 0.081 L 116.139 6.448 L 94.71 6.448 C 91.103 6.448 89.321 8.181 89.321 11.567 L 89.321 20.474 C 89.321 23.899 91.103 25.592 94.71 25.592 L 109.392 25.592 L 109.392 14.952 L 116.054 14.952 Z"/><path d="M 130.566 31.96 L 130.566 9.713 L 150.552 31.96 L 157.383 31.96 L 157.383 0.04 L 150.679 0.04 L 150.679 22.287 L 130.693 0.04 L 123.861 0.04 L 123.861 31.96 L 130.566 31.96 Z"/><path d="M 171.853 0.04 L 171.853 31.96 L 165.149 31.96 L 165.149 0.04 L 171.853 0.04 Z"/><path d="M 213.183 31.96 L 213.183 14.952 C 213.183 14.952 206.478 14.952 206.436 14.912 L 206.436 25.552 L 191.754 25.552 C 188.147 25.552 186.365 23.859 186.365 20.433 L 186.365 11.526 C 186.365 8.101 188.147 6.408 191.754 6.408 L 213.183 6.408 L 213.183 0.04 L 190.863 0.04 C 183.437 0.04 179.703 3.587 179.703 10.68 L 179.703 21.32 C 179.703 28.413 183.437 31.96 190.863 31.96 L 213.183 31.96 Z"/></svg></span>
+    </div>
+  </header>
+
+  <main style="flex:1;width:100%;max-width:980px;margin:0 auto;box-sizing:border-box;padding:32px 24px 56px">
+
+    <!-- ============ PICKER ============ -->
+    <sc-if value="{{ isPicker }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:fadeUp .3s ease both">
+      <div style="background:#e5f2ff;border:1px solid #d2e7fe;border-radius:12px;padding:20px 22px;margin-bottom:24px">
+        <div style="font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:#17569b;font-weight:600;margin-bottom:8px">Governance gate</div>
+        <h1 style="font-size:26px;line-height:32px;font-weight:600;letter-spacing:-0.004em;margin:0">Score an agent-to-agent handoff</h1>
+        <p style="font-size:14px;line-height:21px;color:#374151;margin:8px 0 0;max-width:640px">The Governor sits between two agents and measures how much of the downstream action rests on verified fact versus the upstream agent&rsquo;s inferred judgment &mdash; then routes the handoff to auto-execute, a staged rollout, or human review.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+        <!-- Billing domain -->
+        <section style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="padding:14px 16px;border-bottom:1px solid #eef0f3;background:#fafbfc">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#111827">
+              <span>Intent Classifier</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              <span>Billing Agent</span>
+            </div>
+            <div style="font-size:11px;color:#6b7280;margin-top:3px">3 scenarios &middot; billing domain</div>
+          </div>
+          <sc-for list="{{ billingItems }}" as="row" hint-placeholder-count="3">
+            <div data-id="{{ row.id }}" onClick="{{ onRow }}" role="button" style="display:flex;gap:12px;align-items:flex-start;padding:13px 16px;cursor:pointer;border-bottom:1px solid #f3f4f6;background:{{ row.rowBg }};box-shadow:{{ row.rowRing }}" style-hover="background:#f6f9fe">
+              <span style="width:16px;height:16px;flex:0 0 16px;margin-top:2px;border-radius:50%;border:1.5px solid {{ row.radioBorder }};display:flex;align-items:center;justify-content:center">
+                <span style="width:8px;height:8px;border-radius:50%;background:{{ row.radioDot }}"></span>
+              </span>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13px;line-height:18px;font-weight:500;color:#1f2937">{{ row.claim }}</div>
+                <div style="font-size:11px;color:#6b7280;margin-top:3px">{{ row.tag }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </section>
+
+        <!-- Fraud domain -->
+        <section style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="padding:14px 16px;border-bottom:1px solid #eef0f3;background:#fafbfc">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#111827">
+              <span>Fraud Signal</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              <span>Account-Action Agent</span>
+            </div>
+            <div style="font-size:11px;color:#6b7280;margin-top:3px">3 scenarios &middot; fraud domain</div>
+          </div>
+          <sc-for list="{{ fraudItems }}" as="row" hint-placeholder-count="3">
+            <div data-id="{{ row.id }}" onClick="{{ onRow }}" role="button" style="display:flex;gap:12px;align-items:flex-start;padding:13px 16px;cursor:pointer;border-bottom:1px solid #f3f4f6;background:{{ row.rowBg }};box-shadow:{{ row.rowRing }}" style-hover="background:#f6f9fe">
+              <span style="width:16px;height:16px;flex:0 0 16px;margin-top:2px;border-radius:50%;border:1.5px solid {{ row.radioBorder }};display:flex;align-items:center;justify-content:center">
+                <span style="width:8px;height:8px;border-radius:50%;background:{{ row.radioDot }}"></span>
+              </span>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13px;line-height:18px;font-weight:500;color:#1f2937">{{ row.claim }}</div>
+                <div style="font-size:11px;color:#6b7280;margin-top:3px">{{ row.tag }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </section>
+      </div>
+
+      <div style="margin-top:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 18px">
+        <div style="font-size:13px;color:#6b7280;min-width:0">{{ pickerHint }}</div>
+        <button onClick="{{ onRun }}" disabled="{{ runDisabled }}" style="height:40px;padding:0 18px;border:none;border-radius:8px;background:#126bce;color:#fff;font:600 14px/1 'Geist';display:inline-flex;align-items:center;gap:8px;cursor:pointer;flex:0 0 auto;opacity:{{ runOpacity }}" style-hover="background:#17569b">
+          Run Governor
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ LOADING ============ -->
+    <sc-if value="{{ isLoading }}">
+    <div style="animation:fadeUp .3s ease both;max-width:560px;margin:28px auto 0">
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:26px 28px 22px;box-shadow:0 10px 15px #1f293724">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="position:relative;width:40px;height:40px;flex:0 0 40px">
+            <div style="position:absolute;inset:0;border-radius:50%;border:2px solid #d2e7fe"></div>
+            <div style="position:absolute;inset:0;border-radius:50%;border:2px solid transparent;border-top-color:#126bce;animation:spin .8s linear infinite"></div>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#126bce"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7 2 13a3 3 0 0 0 6 0z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0z"/><path d="M8 21h8"/></svg></div>
+          </div>
+          <div style="min-width:0">
+            <div style="font-size:15px;font-weight:600;color:#111827">Governor is evaluating the handoff</div>
+            <div style="font-family:'DM Mono',monospace;font-size:11.5px;color:#6b7280;margin-top:2px">{{ loadingAgents }}</div>
+          </div>
+        </div>
+
+        <div style="margin:16px 0 18px;padding:12px 14px;background:#f9fafb;border:1px solid #eef0f3;border-radius:8px;font-size:13px;line-height:19px;color:#374151">&ldquo;{{ selectedClaim }}&rdquo;</div>
+
+        <sc-for list="{{ loadingSteps }}" as="step" hint-placeholder-count="5">
+          <div style="display:flex;align-items:center;gap:11px;padding:6px 0">
+            <span style="width:18px;height:18px;flex:0 0 18px;display:flex;align-items:center;justify-content:center">
+              <sc-if value="{{ step.done }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#208337" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></sc-if>
+              <sc-if value="{{ step.active }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#126bce" stroke-width="2.5" stroke-linecap="round" style="animation:spin .8s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></sc-if>
+              <sc-if value="{{ step.pending }}"><span style="width:9px;height:9px;border-radius:50%;border:1.5px solid #d1d5db"></span></sc-if>
+            </span>
+            <span style="font-size:13px;color:{{ step.color }};font-weight:{{ step.weight }}">{{ step.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ RESULT ============ -->
+    <sc-if value="{{ isResult }}">
+    <div style="animation:fadeUp .3s ease both">
+
+      <!-- Route banner -->
+      <div style="border:1px solid {{ r.border }};background:{{ r.bg }};border-radius:16px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="width:54px;height:54px;flex:0 0 54px;border-radius:50%;background:#fff;border:1px solid {{ r.border }};display:flex;align-items:center;justify-content:center;color:{{ r.color }}">
+            <sc-if value="{{ isAuto }}"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></sc-if>
+            <sc-if value="{{ isStaged }}"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></sc-if>
+            <sc-if value="{{ isHuman }}"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></sc-if>
+          </div>
+          <div>
+            <div style="font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:{{ r.text }};opacity:.7;font-weight:600">Governor routed to</div>
+            <div style="font-size:23px;line-height:28px;font-weight:600;letter-spacing:-0.003em;color:{{ r.text }};margin-top:2px">{{ r.routeLabel }}</div>
+            <div style="font-size:13px;color:{{ r.text }};opacity:.85;margin-top:2px">{{ r.routeSub }}</div>
+          </div>
+        </div>
+        <div style="position:relative;width:118px;height:118px;flex:0 0 118px">
+          <sc-if value="{{ showSonar }}">
+            <div style="position:absolute;top:50%;left:50%;width:96px;height:96px;margin:-48px 0 0 -48px;border-radius:50%;border:2px solid {{ r.color }};animation:sonar 2.4s ease-out infinite"></div>
+            <div style="position:absolute;top:50%;left:50%;width:96px;height:96px;margin:-48px 0 0 -48px;border-radius:50%;border:2px solid {{ r.color }};animation:sonar 2.4s ease-out infinite 1.2s"></div>
+          </sc-if>
+          <svg width="118" height="118" viewBox="0 0 120 120" style="position:relative">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#00000010" stroke-width="9"/>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="{{ r.color }}" stroke-width="9" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="{{ scoreDashoffset }}" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <div style="font-size:30px;font-weight:700;color:{{ r.text }};line-height:1">{{ displayScore }}</div>
+            <div style="font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:#6b7280;margin-top:3px">Blast radius</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Handoff A -> B -->
+      <div style="margin-top:16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;background:#fff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden">
+        <div style="padding:20px 22px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:22px;height:22px;border-radius:6px;background:#eef1f5;color:#4b5563;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">A</span>
+            <span style="font-size:12.5px;font-weight:600;color:#374151">{{ r.agentA }}</span>
+          </div>
+          <div style="font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:#9ca3af;font-weight:600;margin:14px 0 6px">Says</div>
+          <div style="font-size:15px;line-height:22px;color:#111827">&ldquo;{{ r.claim }}&rdquo;</div>
+          <div style="margin-top:16px">
+            <div style="font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:#6b7280;margin-bottom:6px">Claim basis</div>
+            <div style="display:flex;gap:4px">
+              <sc-for list="{{ r.basisSegs }}" as="seg" hint-placeholder-count="4"><div style="height:6px;flex:1;border-radius:3px;background:{{ seg.bg }}"></div></sc-for>
+            </div>
+            <div style="font-size:12.5px;font-weight:600;color:{{ r.color }};margin-top:7px">{{ r.basisLabel }}</div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:0 20px;background:#fafbfc;border-left:1px solid #eef0f3;border-right:1px solid #eef0f3">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <div style="width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid {{ r.border }};display:flex;align-items:center;justify-content:center;color:{{ r.color }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7 2 13a3 3 0 0 0 6 0z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0z"/><path d="M8 21h8"/></svg></div>
+          <div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af;font-weight:600">Gate</div>
+        </div>
+
+        <div style="padding:20px 22px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:22px;height:22px;border-radius:6px;background:#eef1f5;color:#4b5563;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">B</span>
+            <span style="font-size:12.5px;font-weight:600;color:#374151">{{ r.agentB }}</span>
+          </div>
+          <div style="font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:#9ca3af;font-weight:600;margin:14px 0 6px">Is about to</div>
+          <div style="font-size:15px;line-height:22px;color:#111827">{{ r.action }}</div>
+          <div style="margin-top:16px">
+            <div style="font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:#6b7280;margin-bottom:6px">Reversibility</div>
+            <div style="display:flex;gap:4px">
+              <sc-for list="{{ r.reversSegs }}" as="seg" hint-placeholder-count="3"><div style="height:6px;flex:1;border-radius:3px;background:{{ seg.bg }}"></div></sc-for>
+            </div>
+            <div style="font-size:12.5px;font-weight:600;color:{{ r.color }};margin-top:7px">{{ r.reversLabel }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rationale -->
+      <div style="margin-top:16px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:20px 22px;display:flex;gap:16px">
+        <div style="width:3px;border-radius:2px;background:{{ r.color }};flex:0 0 3px"></div>
+        <div>
+          <div style="font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:#6b7280;font-weight:600">Governor rationale</div>
+          <div style="font-size:16px;line-height:24px;color:#111827;margin-top:7px;text-wrap:pretty">{{ r.rationale }}</div>
+        </div>
+      </div>
+
+      <!-- Audit + actions -->
+      <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:11.5px;color:#6b7280">
+          <span style="width:7px;height:7px;border-radius:50%;background:#208337"></span>
+          <span>{{ auditLine }}</span>
+        </div>
+        <div style="display:flex;gap:10px;flex:0 0 auto">
+          <button onClick="{{ onReset }}" style="height:36px;padding:0 14px;border:1px solid #d1d5db;border-radius:8px;background:#fff;color:#1f2937;font:500 13px/1 'Geist';display:inline-flex;align-items:center;gap:7px;cursor:pointer" style-hover="background:#f3f4f6">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Run another
+          </button>
+          <button onClick="{{ onSummary }}" style="height:36px;padding:0 14px;border:none;border-radius:8px;background:#e5f2ff;color:#164479;font:600 13px/1 'Geist';display:inline-flex;align-items:center;gap:7px;cursor:pointer" style-hover="background:#d2e7fe">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+            View all scenarios
+          </button>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ SUMMARY ============ -->
+    <sc-if value="{{ isSummary }}">
+    <div style="animation:fadeUp .3s ease both">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px">
+        <div>
+          <h1 style="font-size:24px;line-height:30px;font-weight:600;letter-spacing:-0.004em;margin:0">One engine, two domains</h1>
+          <p style="font-size:14px;color:#374151;margin:6px 0 0">All six handoffs, scored by the same gate &mdash; billing and fraud, across the full outcome range.</p>
+        </div>
+        <button onClick="{{ onBack }}" style="height:36px;padding:0 14px;border:1px solid #d1d5db;border-radius:8px;background:#fff;color:#1f2937;font:500 13px/1 'Geist';display:inline-flex;align-items:center;gap:7px;cursor:pointer;flex:0 0 auto" style-hover="background:#f3f4f6">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </button>
+      </div>
+
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:1fr 158px 148px 172px 74px;gap:12px;padding:11px 18px;background:#fafbfc;border-bottom:1px solid #eef0f3;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#6b7280;font-weight:600">
+          <div>Handoff claim</div><div>Claim basis</div><div>Reversibility</div><div>Route</div><div style="text-align:right">Score</div>
+        </div>
+
+        <div style="padding:8px 18px;background:#f9fafb;border-bottom:1px solid #f0f2f4;font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:8px">
+          <span style="width:6px;height:6px;border-radius:50%;background:#126bce"></span>Intent Classifier &rarr; Billing Agent
+        </div>
+        <sc-for list="{{ billingItems }}" as="row" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:1fr 158px 148px 172px 74px;gap:12px;padding:13px 18px;border-bottom:1px solid #f3f4f6;align-items:center">
+            <div style="font-size:13px;line-height:18px;color:#111827;padding-right:8px">{{ row.claim }}</div>
+            <div style="font-size:12px;color:#4b5563">{{ row.basisLabel }}</div>
+            <div style="font-size:12px;color:#4b5563">{{ row.reversLabel }}</div>
+            <div><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:9999px;font-size:11.5px;font-weight:600;background:{{ row.badgeBg }};color:{{ row.badgeText }};border:1px solid {{ row.badgeBorder }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ row.badgeDot }}"></span>{{ row.routeLabel }}</span></div>
+            <div style="text-align:right;font-weight:700;font-size:15px;color:{{ row.scoreColor }}">{{ row.score }}</div>
+          </div>
+        </sc-for>
+
+        <div style="padding:8px 18px;background:#f9fafb;border-bottom:1px solid #f0f2f4;border-top:1px solid #f0f2f4;font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:8px">
+          <span style="width:6px;height:6px;border-radius:50%;background:#126bce"></span>Fraud Signal &rarr; Account-Action Agent
+        </div>
+        <sc-for list="{{ fraudItems }}" as="row" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:1fr 158px 148px 172px 74px;gap:12px;padding:13px 18px;border-bottom:1px solid #f3f4f6;align-items:center">
+            <div style="font-size:13px;line-height:18px;color:#111827;padding-right:8px">{{ row.claim }}</div>
+            <div style="font-size:12px;color:#4b5563">{{ row.basisLabel }}</div>
+            <div style="font-size:12px;color:#4b5563">{{ row.reversLabel }}</div>
+            <div><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:9999px;font-size:11.5px;font-weight:600;background:{{ row.badgeBg }};color:{{ row.badgeText }};border:1px solid {{ row.badgeBorder }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ row.badgeDot }}"></span>{{ row.routeLabel }}</span></div>
+            <div style="text-align:right;font-weight:700;font-size:15px;color:{{ row.scoreColor }}">{{ row.score }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:14px;font-size:12px;color:#6b7280;display:flex;align-items:center;gap:8px">
+        <span style="width:7px;height:7px;border-radius:50%;background:#208337"></span>
+        {{ summaryCaption }}
+      </div>
+    </div>
+    </sc-if>
+
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;gateLatencyMs&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:2000,&quot;min&quot;:800,&quot;max&quot;:4000,&quot;step&quot;:100,&quot;unit&quot;:&quot;ms&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;showBlastGauge&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;reduceMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;auditModel&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;mistral.mistral-7b-instruct-v0:2&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Audit&quot;}}">
+class Component extends DCLogic {
+  state = { view: 'picker', selectedId: null, step: 0, displayScore: 0, auditTs: '', auditId: '', auditMs: 0 };
+
+  scenarios = [
+    { id:'b1', domain:'billing', route:'auto',
+      claim:'Duplicate charge — confirmed against transaction log',
+      tag:'Refund · duplicate charge',
+      action:'Issue $22 refund for the duplicate charge',
+      basis:'verified-fact', reversibility:'easily-reversible', score:9,
+      rationale:'The duplicate charge is confirmed against the transaction log and a $22 refund is fully reversible, so no human judgment is required to act.' },
+    { id:'b2', domain:'billing', route:'staged',
+      claim:'Customer tone suggests frustration with a recurring billing issue',
+      tag:'Goodwill credit · frustrated tone',
+      action:'Apply a modest goodwill credit',
+      basis:'single-weak-signal', reversibility:'easily-reversible', score:41,
+      rationale:'Frustration is a single weak signal, but a modest goodwill credit is easily reversible, so the action rolls out to a limited cohort rather than firing blind.' },
+    { id:'b3', domain:'billing', route:'human',
+      claim:'Complaint pattern suggests high churn risk',
+      tag:'Retention offer · churn risk',
+      action:'Apply a large retention credit + change contract terms',
+      basis:'speculative-inference', reversibility:'hard-to-reverse', score:79,
+      rationale:'High churn risk is a speculative inference and changing contract terms is hard to reverse, so a person must confirm before a large retention offer is committed.' },
+    { id:'f1', domain:'fraud', route:'auto',
+      claim:'Device mismatch + exact match to a known fraud pattern',
+      tag:'Transaction hold · known pattern',
+      action:'Hold the single flagged transaction',
+      basis:'verified-fact', reversibility:'easily-reversible', score:12,
+      rationale:'The signal is an exact match to a known fraud pattern and holding a single transaction is easily reversible, so the protective action can execute unattended.' },
+    { id:'f2', domain:'fraud', route:'staged',
+      claim:'Unusual login location, no other corroborating signal',
+      tag:'Account restriction · login anomaly',
+      action:'Apply a temporary account restriction',
+      basis:'single-weak-signal', reversibility:'hard-to-reverse', score:52,
+      rationale:'An unusual login location is a single uncorroborated signal and an account restriction is hard to reverse, so the action is staged to a canary cohort first.' },
+    { id:'f3', domain:'fraud', route:'human',
+      claim:'Behavior loosely resembles a fraud pattern from an unrelated case',
+      tag:'Account freeze · loose resemblance',
+      action:'Freeze the account entirely',
+      basis:'speculative-inference', reversibility:'irreversible', score:88,
+      rationale:'The resemblance is a speculative inference drawn from an unrelated case and freezing the account is irreversible, so the decision escalates to a human analyst.' },
+  ];
+
+  RM = {
+    auto:   { label:'Auto-Execute',    sub:'Executed automatically — no human involved', color:'#208337', text:'#166a2c', bg:'#effbf1', border:'#c6eccf' },
+    staged: { label:'Staged / Canary', sub:'Trial rollout — limited blast radius',        color:'#b47e00', text:'#7a5600', bg:'#fff6e0', border:'#f0dca6' },
+    human:  { label:'Human Review',     sub:'Escalated to a person before any action',     color:'#e32926', text:'#b31f1c', bg:'#fdeaea', border:'#f6cfcf' },
+  };
+
+  // Maps the real API's decision strings to this component's internal RM keys.
+  // A generic lowercase/replace transform doesn't work here: "Staged/Canary" -> "staged-canary"
+  // and "Human Review" -> "human-review", neither of which match the RM keys above ('staged', 'human').
+  DECISION_TO_ROUTE = {
+    'Auto-Execute': 'auto',
+    'Staged/Canary': 'staged',
+    'Human Review': 'human',
+  };
+
+  BASIS = ['verified-fact','corroborated-signal','single-weak-signal','speculative-inference'];
+  BASIS_LABEL = ['Verified fact','Corroborated signal','Single weak signal','Speculative inference'];
+  REV = ['easily-reversible','hard-to-reverse','irreversible'];
+  REV_LABEL = ['Easily reversible','Hard to reverse','Irreversible'];
+
+  decorate(s) {
+    const m = this.RM[s.route];
+    const bi = this.BASIS.indexOf(s.basis);
+    const ri = this.REV.indexOf(s.reversibility);
+    return {
+      ...s,
+      routeLabel: m.label, routeSub: m.sub,
+      color: m.color, text: m.text, bg: m.bg, border: m.border,
+      agentA: s.domain === 'billing' ? 'Intent Classifier' : 'Fraud Signal',
+      agentB: s.domain === 'billing' ? 'Billing Agent' : 'Account-Action Agent',
+      basisLabel: this.BASIS_LABEL[bi], reversLabel: this.REV_LABEL[ri],
+      basisSegs: [0,1,2,3].map(i => ({ bg: i <= bi ? m.color : '#e5e7eb' })),
+      reversSegs: [0,1,2].map(i => ({ bg: i <= ri ? m.color : '#e5e7eb' })),
+      badgeBg: m.bg, badgeText: m.text, badgeBorder: m.border, badgeDot: m.color,
+      scoreColor: m.text,
+    };
+  }
+
+  onRow = (e) => {
+    if (this.state.view !== 'picker') return;
+    this.setState({ selectedId: e.currentTarget.dataset.id });
+  };
+
+  onRun = async () => {
+    if (!this.state.selectedId) return;
+    this.setState({ view: 'loading', step: 0 });
+
+    const scenario = this.scenarios.find(s => s.id === this.state.selectedId);
+    if (!scenario) return;
+
+    try {
+      const response = await fetch('/api/gate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sourceAgentClaim: scenario.claim,
+          claimBasis: scenario.basis,
+          downstreamAction: scenario.action,
+          actionReversibility: scenario.reversibility,
+        }),
+      });
+      const result = await response.json();
+      
+      // Update the scenario with live data
+      scenario.score = result.score;
+      scenario.rationale = result.rationale;
+      scenario.route = this.DECISION_TO_ROUTE[result.decision];
+
+      this.showResult();
+    } catch (error) {
+      console.error("Error calling /api/gate:", error);
+      // Optionally handle the error in the UI
+      this.onReset();
+    }
+  };
+
+  showResult() {
+    const d = new Date();
+    const pad = (n, l = 2) => String(n).padStart(l, '0');
+    const ts = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + '.' + pad(d.getMilliseconds(), 3);
+    const id = 'gate_' + Math.random().toString(16).slice(2, 8);
+    const ms = 140 + Math.floor(Math.random() * 190);
+    this.setState({ view: 'result', displayScore: 0, auditTs: ts, auditId: id, auditMs: ms });
+    const target = (this.scenarios.find(s => s.id === this.state.selectedId) || {}).score || 0;
+    let cur = 0;
+    clearInterval(this._count);
+    this._count = setInterval(() => {
+      cur += Math.max(1, Math.round(target / 22));
+      if (cur >= target) { cur = target; clearInterval(this._count); }
+      this.setState({ displayScore: cur });
+    }, 26);
+  }
+
+  onReset = () => { this.clearTimers(); this.setState({ view: 'picker', step: 0, displayScore: 0 }); };
+  
+  onSummary = async () => {
+    this.setState({ view: 'loading' });
+    try {
+        const promises = this.scenarios.map(scenario =>
+            fetch('/api/gate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    sourceAgentClaim: scenario.claim,
+                    claimBasis: scenario.basis,
+                    downstreamAction: scenario.action,
+                    actionReversibility: scenario.reversibility,
+                }),
+            }).then(res => res.json())
+        );
+
+        const results = await Promise.all(promises);
+
+        results.forEach((result, index) => {
+            this.scenarios[index].score = result.score;
+            this.scenarios[index].rationale = result.rationale;
+            this.scenarios[index].route = this.DECISION_TO_ROUTE[result.decision];
+        });
+
+        this.setState({ view: 'summary' });
+    } catch (error) {
+        console.error("Error fetching all scenarios:", error);
+        this.setState({ view: 'picker' });
+    }
+  };
+  
+  onBack = () => this.setState({ view: this.state.selectedId ? 'result' : 'picker' });
+
+  clearTimers() { clearInterval(this._steps); clearTimeout(this._done); clearInterval(this._count); }
+  componentWillUnmount() { this.clearTimers(); }
+
+  renderVals() {
+    const sel = this.state.selectedId;
+    const withSel = (s) => {
+      const d = this.decorate(s);
+      const on = s.id === sel;
+      return { ...d, selected: on,
+        rowBg: on ? '#eef6ff' : 'transparent',
+        rowRing: on ? 'inset 3px 0 0 #126bce' : 'inset 0 0 0 transparent',
+        radioBorder: on ? '#126bce' : '#9ca3af',
+        radioDot: on ? '#126bce' : 'transparent' };
+    };
+    const billingItems = this.scenarios.filter(s => s.domain === 'billing').map(withSel);
+    const fraudItems = this.scenarios.filter(s => s.domain === 'fraud').map(withSel);
+
+    const selScn = this.scenarios.find(s => s.id === sel);
+    const r = selScn ? this.decorate(selScn) : null;
+    const C = 2 * Math.PI * 52;
+    const scoreDashoffset = C * (1 - this.state.displayScore / 100);
+
+    const stepLabels = [
+      'Reading claim',
+      'Calling Mistral via Bedrock',
+      'Parsing response',
+      'Validating score',
+      'Routing decision',
+    ];
+    const cur = this.state.step;
+    const loadingSteps = stepLabels.map((label, i) => {
+      const done = i < cur, active = i === cur, pending = i > cur;
+      return { label, done, active, pending,
+        color: done ? '#1f2937' : active ? '#111827' : '#9ca3af',
+        weight: active ? '600' : '400' };
+    });
+
+    const model = this.props.auditModel ?? 'mistral.mistral-7b-instruct-v0:2';
+    const auditLine = selScn
+      ? `Logged ${this.state.auditTs} · ${this.state.auditId} · route=${selScn.route} · basis=${selScn.basis} · reversibility=${selScn.reversibility} · model=${model} · ${this.state.auditMs}ms`
+      : '';
+
+    // Computed from live results, not hardcoded — the real split can differ from the
+    // designed 2/2/2 shape (e.g. Scenario 5's confirmed fail-safe trigger shifts one
+    // Staged/Canary into Human Review), and the caption must never claim otherwise.
+    const autoCount = this.scenarios.filter(s => s.route === 'auto').length;
+    const stagedCount = this.scenarios.filter(s => s.route === 'staged').length;
+    const humanCount = this.scenarios.filter(s => s.route === 'human').length;
+    const summaryCaption = `Same scoring gate, both domains — ${autoCount} auto-execute, ${stagedCount} staged, ${humanCount} human review.`;
+
+    return {
+      view: this.state.view,
+      isPicker: this.state.view === 'picker',
+      isLoading: this.state.view === 'loading',
+      isResult: this.state.view === 'result',
+      isSummary: this.state.view === 'summary',
+      billingItems, fraudItems,
+      onRow: this.onRow, onRun: this.onRun, onReset: this.onReset, onSummary: this.onSummary, onBack: this.onBack,
+      runDisabled: !sel, runOpacity: sel ? '1' : '.5',
+      pickerHint: selScn ? 'Selected — ' + selScn.claim : 'Select a handoff to score',
+      selectedClaim: selScn ? selScn.claim : '',
+      loadingAgents: selScn ? (selScn.domain === 'billing' ? 'Intent Classifier → Billing Agent' : 'Fraud Signal → Account-Action Agent') : '',
+      loadingSteps,
+      r,
+      isAuto: !!selScn && selScn.route === 'auto',
+      isStaged: !!selScn && selScn.route === 'staged',
+      isHuman: !!selScn && selScn.route === 'human',
+      displayScore: this.state.displayScore,
+      scoreDashoffset,
+      showSonar: (this.props.showBlastGauge ?? true) && !(this.props.reduceMotion ?? false),
+      auditLine,
+      summaryCaption,
+    };
+  }
+}
+</script>
+</body>
+</html>
