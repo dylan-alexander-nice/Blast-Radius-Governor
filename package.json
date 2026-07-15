@@ -1,0 +1,31 @@
+{
+  "name": "blast-radius-governor",
+  "version": "1.0.0",
+  "description": "A prototype Governance Agent for multi-agent AI pipelines. NiCE's own 2026 State of Agentic AI outlook names a coming shift to orchestrated, multi-agent CX operations — *\"conversational AI → reasoning agents → orchestration agents → **governance agents**\"* — but never defines what that governance agent actually does. This project is a first answer: at every handoff between two agents, it scores how much of the downstream action rests on verified fact versus inferred judgment, and routes it to auto-execute, a staged/canary trial, or a human reviewer.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "tsx src/test-story-1.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dylan-alexander-nice/Blast-Radius-Governor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/dylan-alexander-nice/Blast-Radius-Governor/issues"
+  },
+  "homepage": "https://github.com/dylan-alexander-nice/Blast-Radius-Governor#readme",
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.1087.0",
+    "@types/node": "^26.1.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2"
+  }
+}

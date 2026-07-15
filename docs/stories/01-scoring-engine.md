@@ -8,7 +8,7 @@
 - `downstreamAction: string` — what the receiving agent is about to do (e.g. "issue $22 refund")
 - `actionReversibility: "easily-reversible" | "hard-to-reverse" | "irreversible"`
 
-**Call shape:** `@aws-sdk/client-bedrock-runtime` → `BedrockRuntimeClient` + `ConverseCommand`, model `amazon.nova-2-lite-v1:0`, `toolConfig` forcing a tool call that returns exactly:
+**Call shape:** `@aws-sdk/client-bedrock-runtime` → `BedrockRuntimeClient` + `ConverseCommand`, model `mistral.mistral-7b-instruct-v0:2`, `toolConfig` forcing a tool call that returns exactly:
 ```json
 { "score": 0-100, "rationale": "one sentence" }
 ```

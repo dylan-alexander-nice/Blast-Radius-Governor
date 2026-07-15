@@ -14,7 +14,7 @@ NiCE's own 2026 State of Agentic AI outlook names a coming shift: multi-agent pi
 
 - Score every handoff on two axes: **claim basis** (`verified-fact` / `corroborated-signal` / `single-weak-signal` / `speculative-inference`) and **action reversibility** (`easily-reversible` / `hard-to-reverse` / `irreversible`)
 - Route to one of three outcomes: **Auto-Execute**, **Staged/Canary**, **Human Review**
-- LLM scoring via **Amazon Nova 2 Lite** on Bedrock (`amazon.nova-2-lite-v1:0`), forced structured output `{ score, rationale }` — routing decided in code from the score, never by the model
+- LLM scoring via **Mistral 7B Instruct** on Bedrock (`mistral.mistral-7b-instruct-v0:2`), forced structured output `{ score, rationale }` — routing decided in code from the score, never by the model
 - Demo across 2 domain pairs to prove genericity: **Intent-Classifier → Billing Agent**, and **Fraud-Signal → Account-Action Agent** (6 scenarios total, 3 per domain, one per outcome)
 - Simple web UI: pick a scenario, see the live decision + score + rationale
 - Deliverables: video walkthrough + slide deck (no live pitch)
