@@ -23,3 +23,5 @@ Six scenarios across two domains, one per routing outcome per domain, proving th
 **Rehearsal:** run all 6 through the real Bedrock call before recording anything. Know each one's actual score and rationale in advance — this is the agreed mitigation for LLM non-determinism breaking a recorded demo. If a result doesn't land in its expected band, adjust the prompt or the threshold bands in Story 1 — don't change the scenario to fit. The scenarios are the point.
 
 **Recording:** cover at least one example per domain and per outcome (minimum 4 of the 6, ideally all 6) in the video walkthrough.
+
+**Known Issue:** Scenario 5 ("Unusual login location...") has been observed to intermittently fail, with the model returning invalid JSON. The system's retry logic and safety default to "Human Review" work as expected in this case. This is a known reliability limitation of the current model for this specific prompt. For the demo video, we should consider either not showing this specific scenario live, or using the failure as an intentional moment to demonstrate the system's fail-safe behavior.

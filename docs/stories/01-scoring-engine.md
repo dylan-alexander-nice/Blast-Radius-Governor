@@ -18,11 +18,21 @@ Don't ask the model for a decision/tier — only a score and why. Routing is dec
 
 **Routing thresholds (starting point — tune against Story 4's scenarios):**
 - 0–39 → Auto-Execute
-- 40–74 → Staged/Canary
-- 75–100 → Human Review
+- 40–64 → Staged/Canary
+- 65–100 → Human Review
+
+*Note: The Human Review threshold was lowered from 75 to 65 to correctly capture Scenario 3, which was consistently scoring at 70.*
 
 **Demo reliability:** set `temperature` low. Rehearse all 6 scenarios (Story 4) ahead of recording — know the output before you're on camera.
 
 **No separate validation phase.** This is a prototype — build the call, run it against a scenario or two as you go, adjust the prompt if output looks off. If Mistral 7B Instruct's reasoning quality turns out to be a real limitation, that's a legitimate finding for the deck, not a blocker to resolve first.
 
-**Known deviation from the original design:** the spec called for forced structured output via `toolConfig` — the current implementation instead prompts for JSON in plain text and regex-extracts it (`textResponse.match(/\{[\s\S]*\}/)`), likely because Mistral 7B Instruct v0.2 doesn't support tool use on Bedrock's Converse API the way Claude/Nova do. Worth knowing: this reintroduces some of the parsing fragility the forced-tool-call design existed to avoid — if a response ever doesn't contain clean JSON, the regex match fails and the call throws. Not urgent to fix for a prototype, but rehearse Story 4's scenarios with this exact code path before recording, since a parse failure live would be a worse look than a bad score.
+**Confirmed approach — prompted JSON, not forced tool-calls.** Mistral 7B Instruct v0.2 doesn't support tool use on Bedrock's Converse API, so structured output comes from prompting for JSON and parsing the response, not `toolConfig`. That's accepted for this prototype — but plain prompted JSON from a small model is failure-prone, so the parsing path needs to be hardened rather than left as a single regex-match-then-`JSON.parse` with no fallback. Concretely:
+
+1. **Parse defensively, in two steps.** Try `JSON.parse` on the trimmed raw response first; if that throws, fall back to extracting the outermost `{...}` block via regex and parsing that. Either path failing counts as a parse failure.
+2. **Validate the shape before trusting it.** A syntactically valid JSON blob isn't necessarily the right shape — check `score` is a finite number between 0 and 100, and `rationale` is a non-empty string, before returning it. Anything else is treated as a failure.
+3. **Retry once on any failure** (parse, validation, or API error) — 2 attempts total. Small instruct models occasionally produce a malformed response; a second roll often succeeds.
+4. **Fail closed, not open, once retries are exhausted.** This is the important one: a governance gate that silently crashes or defaults to auto-execute on a scoring failure defeats the entire premise of the project. If both attempts fail, return `{ score: 100, rationale: "Automated scoring failed after retries — escalated to human review as a safety default." }` so the caller always gets a Human Review decision instead of an unhandled exception. This is standard fail-safe design for any risk-gating system — deny/escalate on uncertainty, never permit by default — and it's a good line in the pitch, not just a bug fix.
+5. **Log every attempt**, success and failure, with enough detail to reconstruct what happened. This doubles as the audit trail NiCE's own governance framing names as a core capability the demo should visibly cover.
+
+**Rehearsal script:** `src/test-story-1.ts` currently runs one hardcoded scenario. Expand it to loop over all 6 of Story 4's scenarios, print each decision/score/rationale, and flag whether each landed in its expected band — this is what actually operationalizes "rehearse all 6 scenarios before recording," which until now was written into the docs but not implemented anywhere.

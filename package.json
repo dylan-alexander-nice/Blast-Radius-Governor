@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "tsx src/test-story-1.ts"
+    "test": "tsx src/__tests__/scoring-engine.test.ts"
   },
   "repository": {
     "type": "git",

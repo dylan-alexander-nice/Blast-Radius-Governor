@@ -29,8 +29,9 @@ NiCE's own 2026 State of Agentic AI outlook names a coming shift: multi-agent pi
 ## Acceptance Criteria
 
 - [ ] All 6 scenarios return a decision within ~3 seconds
-- [ ] All 6 have been rehearsed — output known before recording
+- [ ] All 6 have been rehearsed — output known before recording, using the same rehearsal script the build actually runs on
 - [ ] UI shows decision + score + rationale for every run, no crashes
+- [ ] Scoring failures fail closed to Human Review after a bounded retry — never a silent auto-execute, never an unhandled crash
 - [ ] Video walkthrough covers at least one scenario per domain and per outcome
 - [ ] Slide deck covers: the Governance Agent framing, the two-axis scoring model, demo highlights, business value
 - [ ] Submission form updated with the video link and deck attached — lives at `ideas/sparkathon_submissions/blast-radius-governor.md` in the `topic_ai-llm-wiki` repo, not in this repo
