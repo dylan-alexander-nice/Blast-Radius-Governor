@@ -18,6 +18,21 @@
 - **Product Innovation** — a first working answer to a role NiCE's own materials name as coming but leave undefined.
 - **Product Modernization** — gives any existing agent pipeline a drop-in oversight layer without redesigning it for the agentic era.
 
+## Run it locally
+
+Requires Node.js 18+ and AWS credentials (`aws configure`, SSO, or env vars — any standard SDK credential source) with Bedrock access to `mistral.mistral-7b-instruct-v0:2` in your default region.
+(I ran `aws-azure-login --mode=gui`)
+
+```bash
+npm install
+npm run build
+npm start
+```
+
+Open `http://localhost:3000` — give it 2–3 seconds after startup, the first request can transiently fail while the server warms up.
+
+Run the 6-scenario rehearsal directly against live Bedrock: `npm test`
+
 ## Start here
 
 Read **`docs/REQUIREMENTS.md`** — short by design: goals, requirements, acceptance criteria, and a map to the 4 implementation stories in `docs/stories/`. Presentation materials (video script, deck talking points) live in `docs/presentation/`.

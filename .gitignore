@@ -70,3 +70,6 @@ typings/
 
 # VSCode
 .vscode/
+
+# Recorded video assets — too large for git, published to SharePoint instead
+docs/presentation/*.mp4
