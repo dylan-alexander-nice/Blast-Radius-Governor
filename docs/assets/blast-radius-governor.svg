@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400" font-family="&#39;Segoe UI&#39;, system-ui, -apple-system, &#39;Helvetica Neue&#39;, Arial, sans-serif">
+  <defs>
+    <linearGradient id="gateGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6100FF"></stop>
+      <stop offset="1" stop-color="#3694FC"></stop>
+    </linearGradient>
+    
+  </defs>
+
+  
+  <rect x="0" y="0" width="1200" height="400" rx="20" fill="#21212B"></rect>
+
+  
+  <text x="48" y="46" fill="#7C7C8C" font-size="14" font-weight="700" letter-spacing="2.5">BLAST RADIUS GOVERNOR</text>
+
+  
+  <path class="ln lnG" d="M596 200 C 640 200, 648 100, 700 100" pathLength="100" fill="none" stroke="#00B382" stroke-width="2.5" stroke-linecap="round"></path>
+  <path class="ln lnA" d="M596 200 L 700 200" pathLength="100" fill="none" stroke="#D99000" stroke-width="2.5" stroke-linecap="round"></path>
+  <path class="ln lnC" d="M596 200 C 640 200, 648 300, 700 300" pathLength="100" fill="none" stroke="#FF5B8A" stroke-width="2.5" stroke-linecap="round"></path>
+
+  
+  <g>
+    <circle class="glow" cx="540" cy="200" r="62" fill="#6100FF"></circle>
+    <path d="M540 148 L592 200 L540 252 L488 200 Z" fill="url(#gateGrad)"></path>
+    
+    <g stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" fill="none">
+      <path d="M516 200 H540"></path>
+      <path d="M540 200 L562 178"></path>
+      <path d="M540 200 H564"></path>
+      <path d="M540 200 L562 222"></path>
+    </g>
+    <circle cx="516" cy="200" r="4" fill="#FFFFFF"></circle>
+    <text x="540" y="288" fill="#B7A7FF" font-size="14" font-weight="700" letter-spacing="2.5" text-anchor="middle">GOVERNOR</text>
+  </g>
+
+  
+  <g class="pill">
+    <rect x="70" y="176" width="252" height="48" rx="24" fill="#2C2C38" stroke="#5A5A6B" stroke-width="1.6" stroke-dasharray="5 5"></rect>
+    <circle cx="98" cy="200" r="6" fill="#7C7C8C"></circle>
+    <text x="118" y="207" fill="#C7C7D4" font-size="20" font-weight="600">unverified inference</text>
+  </g>
+
+  
+  <g class="chip chipG">
+    <rect x="700" y="62" width="392" height="76" rx="16" fill="#20302C" stroke="#00B382" stroke-width="1.6"></rect>
+    <circle cx="740" cy="100" r="18" fill="#00B382"></circle>
+    <path d="M732 100 L738 106 L749 93" fill="none" stroke="#20302C" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"></path>
+    <text x="774" y="95" fill="#33D9A6" font-size="27" font-weight="700">Auto-Execute</text>
+    <text x="774" y="120" fill="#8FA79E" font-size="15" font-weight="500">no human needed</text>
+    <rect class="hlG" x="696" y="58" width="400" height="84" rx="18" fill="none" stroke="#00B382" stroke-width="3"></rect>
+  </g>
+
+  
+  <g class="chip chipA">
+    <rect x="700" y="162" width="392" height="76" rx="16" fill="#302A1E" stroke="#D99000" stroke-width="1.6"></rect>
+    <circle cx="740" cy="200" r="18" fill="#D99000"></circle>
+    <g stroke="#302A1E" stroke-width="3.2" stroke-linecap="round" fill="none">
+      <path d="M740 190 V200 L747 205"></path>
+    </g>
+    <text x="774" y="195" fill="#F0AE2E" font-size="27" font-weight="700">Staged / Canary</text>
+    <text x="774" y="220" fill="#A79A82" font-size="15" font-weight="500">gradual rollout</text>
+    <rect class="hlA" x="696" y="158" width="400" height="84" rx="18" fill="none" stroke="#D99000" stroke-width="3"></rect>
+  </g>
+
+  
+  <g class="chip chipC">
+    <rect x="700" y="262" width="392" height="76" rx="16" fill="#33232A" stroke="#FF5B8A" stroke-width="1.6"></rect>
+    <circle cx="740" cy="300" r="18" fill="#FF5B8A"></circle>
+    <circle cx="740" cy="294" r="5" fill="#33232A"></circle>
+    <path d="M731 312 C 731 303, 749 303, 749 312" fill="none" stroke="#33232A" stroke-width="3.2" stroke-linecap="round"></path>
+    <text x="774" y="295" fill="#FF7BA1" font-size="27" font-weight="700">Human Review</text>
+    <text x="774" y="320" fill="#A98793" font-size="15" font-weight="500">routed to a person</text>
+    <rect class="hlC" x="696" y="258" width="400" height="84" rx="18" fill="none" stroke="#FF5B8A" stroke-width="3"></rect>
+  </g>
+
+  
+  <g class="tag">
+    <text x="285" y="338" fill="#FFFFFF" font-size="32" font-weight="700" text-anchor="middle">One gate.</text>
+    <text x="285" y="370" fill="#B7A7FF" font-size="22" font-weight="600" text-anchor="middle">Every hand-off governed.</text>
+  </g>
+</svg>
